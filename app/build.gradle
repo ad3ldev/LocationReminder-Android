@@ -26,6 +26,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     testOptions.unitTests {
         includeAndroidResources = true
         returnDefaultValues = true
@@ -122,5 +127,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
 
+
+    implementation platform('com.google.firebase:firebase-bom:30.4.1')
 
 }
