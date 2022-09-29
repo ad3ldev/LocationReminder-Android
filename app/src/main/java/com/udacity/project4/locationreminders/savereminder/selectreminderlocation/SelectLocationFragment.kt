@@ -92,6 +92,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     .show()
             } else {
                 onLocationSelected()
+                findNavController().popBackStack()
             }
         }
         return binding.root
@@ -101,7 +102,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         _viewModel.reminderSelectedLocationStr.value = selectedLocName
         _viewModel.latitude.value = selectedLocLat
         _viewModel.longitude.value = selectedLocLng
-        findNavController().popBackStack()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

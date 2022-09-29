@@ -31,8 +31,8 @@ class ReminderDescriptionActivity : AppCompatActivity() {
             R.layout.activity_reminder_description
         )
         val reminder = intent.extras!![EXTRA_ReminderDataItem] as ReminderDataItem
-//        reminder.title?.let { binding.detailTitle.text = it }
-//        reminder.location?.let { binding.detailLocation.text = it }
-//        reminder.description?.let { binding.detailDescription.text = it }
+        reminder.title?.let { binding.titleDetails.text = it }
+        reminder.location?.let { binding.locationDetails.text = it }
+        reminder.description?.let { binding.descriptionDetails.text = it }
     }
 }
