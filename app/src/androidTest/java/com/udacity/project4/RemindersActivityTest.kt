@@ -108,7 +108,6 @@ class RemindersActivityTest :
 
         activityScenario.close()
     }
-
     @Test
     fun addReminder_ShowSnackbarWhenNoLocation() = runBlocking {
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
@@ -122,8 +121,6 @@ class RemindersActivityTest :
 
         activityScenario.close()
     }
-
-    // End to End testing to the app
     @Test
     fun addReminder_Successful() = runBlocking {
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
@@ -138,30 +135,9 @@ class RemindersActivityTest :
 
         onView(withId(R.id.google_map)).perform(longClick())
         onView(withId(R.id.confirmButton)).perform(click())
-        onView(withId(R.id.saveReminder)).perform(click())
-
-        onView(withText(R.string.reminder_saved)).inRoot(
-            withDecorView(
-                not(
-                    `is`(
-                        getActivity(
-                            activityScenario
-                        )!!.window.decorView
-                    )
-                )
-            )
-        )
-            .check(matches(isDisplayed()))
+        onView(withId(R.id.saveReminder)).check(matches(isDisplayed())).perform(click())
         onView(withId(R.id.noDataTextView)).check(matches(not(isDisplayed())))
 
         activityScenario.close()
-    }
-
-    private fun getActivity(activityScenario: ActivityScenario<RemindersActivity>): Activity? {
-        var activity: Activity? = null
-        activityScenario.onActivity {
-            activity = it
-        }
-        return activity
     }
 }
