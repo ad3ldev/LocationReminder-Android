@@ -42,12 +42,17 @@ Explain what each test does and why
 
 ```
 1.androidTest
-        //TODO: Students explain their testing here.
+    - RemindersDaoTest.kt: Testing the save and update methods of the Dao and Room database.
+    - RemindersLocalRepositoryTest.kt: Testing the repository saving and retrieving methods.
+    - ReminderListFragmentTest.kt: Testing the navigation from the ReminderListFragment to adding a reminder, and if the correct screen is shown when there are no reminders.
+    - RemindersActivityTest.kt: End-to-end Testing to check if a reminder can be added successfully and if the reminder can't be added when there is no title or location
 2. test
-        //TODO: Students explain their testing here.
+    - RemindersListViewModelTest.kt: Testing the methods of the mentioned viewModel, testing to see if it is loading, and if it retrieves the correct data, and testing to see if it throws an error when there is no reminders.
+    - SaveReminderViewModelTest.kt: Testing the methods of the mentioned viewModel, Testing of the validation of data, the saving of data, and clearing of the viewModel.
 ```
 
 ## Project Instructions
+
     1. Create a Login screen to ask users to login using an email address or a Google account.  Upon successful login, navigate the user to the Reminders screen.   If there is no account, the app should navigate to a Register screen.
     2. Create a Register screen to allow a user to register using an email address or a Google account.
     3. Create a screen that displays the reminders retrieved from local storage. If there are no reminders, display a   "No Data"  indicator.  If there are any errors, display an error message.
@@ -64,7 +69,6 @@ Explain what each test does and why
         a. Test DAO (Data Access Object) and Repository classes.
         b. Add testing for the error messages.
         c. Add End-To-End testing for the Fragments navigation.
-
 
 ## Student Deliverables:
 

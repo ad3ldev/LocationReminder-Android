@@ -25,6 +25,7 @@ import org.mockito.Mockito
 @MediumTest
 class ReminderListFragmentTest {
 
+    // Testing the navigation to add a reminder
     @Test
     fun navigateToAddReminderScreen() {
         val scenario = launchFragmentInContainer<ReminderListFragment>(null, R.style.AppTheme)
@@ -38,6 +39,7 @@ class ReminderListFragmentTest {
         )
     }
 
+    // Testing if there are no reminders the correct screen is displayed
     @Test
     fun activeReminderList_NoDataDisplayed() {
         launchFragmentInContainer<ReminderListFragment>(null, R.style.AppTheme)

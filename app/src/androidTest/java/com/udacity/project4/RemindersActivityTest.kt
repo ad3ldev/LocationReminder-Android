@@ -95,6 +95,7 @@ class RemindersActivityTest :
         IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
     }
 
+    // Testing if the snackbar appears when there is no title added
     @Test
     fun addReminder_ShowSnackbarWhenNoTitle() = runBlocking {
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
@@ -108,6 +109,7 @@ class RemindersActivityTest :
 
         activityScenario.close()
     }
+    // Testing if the snackbar appears when there is no location added
     @Test
     fun addReminder_ShowSnackbarWhenNoLocation() = runBlocking {
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
@@ -121,6 +123,7 @@ class RemindersActivityTest :
 
         activityScenario.close()
     }
+    // Testing if a reminder can be added successfully
     @Test
     fun addReminder_Successful() = runBlocking {
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)

@@ -30,6 +30,7 @@ class RemindersLocalRepositoryTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
+    //  Setting up the repository
     @Before
     fun setup() {
         // using an in-memory database for testing, since it doesn't survive killing the process
@@ -47,11 +48,13 @@ class RemindersLocalRepositoryTest {
             )
     }
 
+    //  cleanup after every test
     @After
     fun cleanUp() {
         database.close()
     }
 
+    // Testing saving and retrieving a reminder by ID
     @Test
     fun saveReminder_retrievesReminder() = runBlocking {
         // GIVEN - a new reminder saved in the database
@@ -72,6 +75,7 @@ class RemindersLocalRepositoryTest {
         assertThat(result.data.longitude, `is`(reminder.longitude))
     }
 
+    // Testing saving and retrieving a reminder that doesn't exist
     @Test
     fun retrievesNotFoundReminder() = runBlocking {
         // WHEN  - a ReminderID was is not in repository

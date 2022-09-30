@@ -46,6 +46,7 @@ class RemindersListViewModelTest {
         stopKoin()
     }
 
+    // Checking if the loaded reminders are correct
     @Test
     fun loadReminders_getsStoredReminders() {
         remindersViewModel.loadReminders()
@@ -61,6 +62,7 @@ class RemindersListViewModelTest {
         }
     }
 
+    // Checking if the reminders are loading
     @Test
     fun loadReminders_checkLoading() {
         mainCoroutineRule.pauseDispatcher()
@@ -70,6 +72,7 @@ class RemindersListViewModelTest {
         assertThat(remindersViewModel.showLoading.getOrAwaitValue(), `is`(false))
     }
 
+    // Checking if we get an error if there is no reminders
     @Test
     fun loadReminders_getRemindersError() {
         reminders.clear()

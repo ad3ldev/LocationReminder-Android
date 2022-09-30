@@ -29,6 +29,8 @@ class RemindersDaoTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
+
+    //    Initializing the database before each test
     @Before
     fun initDb() {
         database = Room.inMemoryDatabaseBuilder(
@@ -39,6 +41,7 @@ class RemindersDaoTest {
     @After
     fun closeDb() = database.close()
 
+    //    Testing that the Dao saves a reminder when given by id
     @Test
     fun insertReminderAndGetById() = runBlockingTest {
         // GIVEN - insert a reminder
@@ -57,7 +60,7 @@ class RemindersDaoTest {
         assertThat(loaded.latitude, `is`(reminder.latitude))
         assertThat(loaded.longitude, `is`(reminder.longitude))
     }
-
+    //    Testing that the Dao updates a reminder when given the same id
     @Test
     fun updateReminderAndGetById() = runBlockingTest {
         // When inserting a reminder

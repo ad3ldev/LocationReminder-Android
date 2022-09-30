@@ -53,6 +53,7 @@ class SaveReminderViewModelTest {
         stopKoin()
     }
 
+    // Testing if the validation of data works correctly
     @Test
     fun validateEnteredData() {
         val invalidReminder = ReminderDataItem("", "", "", 0.0, 0.0)
@@ -62,6 +63,7 @@ class SaveReminderViewModelTest {
         assertThat(viewModel.validateEnteredData(validReminder), `is`(true))
     }
 
+    // Testing if it saves the reminder correctly
     @Test
     fun saveReminder() {
         val reminder = ReminderDataItem("title", "description", "location", 0.0, 0.0, "id")
@@ -85,6 +87,7 @@ class SaveReminderViewModelTest {
         }
     }
 
+    // Checking if onClear of the viewModel works
     @Test
     fun clearSelectedReminder() {
         viewModel.apply {
