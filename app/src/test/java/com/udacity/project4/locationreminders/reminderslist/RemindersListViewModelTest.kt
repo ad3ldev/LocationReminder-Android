@@ -36,6 +36,7 @@ class RemindersListViewModelTest {
 
     @Before
     fun setupViewModel() {
+        // Start a repository to use
         remindersRepository = FakeDataSource(reminders)
         remindersViewModel =
             RemindersListViewModel(ApplicationProvider.getApplicationContext(), remindersRepository)
@@ -49,13 +50,20 @@ class RemindersListViewModelTest {
     // Checking if the loaded reminders are correct
     @Test
     fun loadReminders_getsStoredReminders() {
+        // Loading reminders to the viewModel
         remindersViewModel.loadReminders()
 
+        // wait for the remindersList to be loaded
         val value = remindersViewModel.remindersList.getOrAwaitValue()
+
+        // check if the reminders loaded are the same expected values
         assertThat(value.size, `is`(reminders.size))
         for (i in 0 until reminders.size) {
+            // Checking title
             assertThat(value[i].title, `is`("title$i"))
+            // Checking description
             assertThat(value[i].description, `is`("description$i"))
+            // Checking location, latitude and longitude
             assertThat(value[i].location, `is`("location$i"))
             assertThat(value[i].latitude, `is`(i.toDouble()))
             assertThat(value[i].longitude, `is`(i.toDouble()))
@@ -65,21 +73,31 @@ class RemindersListViewModelTest {
     // Checking if the reminders are loading
     @Test
     fun loadReminders_checkLoading() {
+        // Pause the dispatcher so  the dispatcher will not execute any coroutines automatically
         mainCoroutineRule.pauseDispatcher()
+        // load reminders
         remindersViewModel.loadReminders()
+        // see if the data is loading
         assertThat(remindersViewModel.showLoading.getOrAwaitValue(), `is`(true))
+        // Resume the dispatcher
         mainCoroutineRule.resumeDispatcher()
+        // check that loading is done.
         assertThat(remindersViewModel.showLoading.getOrAwaitValue(), `is`(false))
     }
 
     // Checking if we get an error if there is no reminders
     @Test
     fun loadReminders_getRemindersError() {
+        // Clear the reminders mutable list
         reminders.clear()
+        // Create a repository with no Data
         remindersRepository = FakeDataSource(null)
+        // And create a view model with that repository
         remindersViewModel =
             RemindersListViewModel(ApplicationProvider.getApplicationContext(), remindersRepository)
+        // Try to load the reminders
         remindersViewModel.loadReminders()
+        // Check if the snackbar will be shown with an exception
         assertThat(remindersViewModel.showSnackBar.getOrAwaitValue(), `is`("java.lang.Exception: Reminders not found"))
     }
 }

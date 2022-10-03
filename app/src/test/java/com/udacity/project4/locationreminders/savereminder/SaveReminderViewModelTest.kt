@@ -56,26 +56,37 @@ class SaveReminderViewModelTest {
     // Testing if the validation of data works correctly
     @Test
     fun validateEnteredData() {
+        // invalid reminder created
         val invalidReminder = ReminderDataItem("", "", "", 0.0, 0.0)
+        // valid reminder created
         val validReminder = ReminderDataItem("title", "description", "location", 0.0, 0.0)
 
+        // Trying to insert the invalid data should return a false
         assertThat(viewModel.validateEnteredData(invalidReminder), `is`(false))
+        // Trying to insert the valid data should return a true
         assertThat(viewModel.validateEnteredData(validReminder), `is`(true))
     }
 
     // Testing if it saves the reminder correctly
     @Test
     fun saveReminder() {
+        // Dummy reminder to use for testing
         val reminder = ReminderDataItem("title", "description", "location", 0.0, 0.0, "id")
 
+        // check if the reminder entered is valid
         require(viewModel.validateEnteredData(reminder))
+        // save it to the view model
         viewModel.saveReminder(reminder)
 
+        // create a reminder result that has the default value of an Error
         var reminderById: Result<ReminderDTO> = Result.Error("not initialized")
+
+        // coroutine to get the the dummy reminder
         viewModel.viewModelScope.launch {
             reminderById = dataSource.getReminder("id")
         }
 
+        // Assert that the data got from the dataSource is correct
         assert(reminderById is Result.Success)
         (reminderById as Result.Success).data.apply {
             assertThat(title,`is`("title"))
@@ -90,6 +101,7 @@ class SaveReminderViewModelTest {
     // Checking if onClear of the viewModel works
     @Test
     fun clearSelectedReminder() {
+        // put some dummy info in the variables inside the viewModel
         viewModel.apply {
             reminderTitle.value = "title"
             reminderDescription.value = "description"
@@ -98,8 +110,11 @@ class SaveReminderViewModelTest {
             longitude.value = 0.0
         }
 
+        // Clear viewModel
         viewModel.onClear()
 
+
+        // Check if the view Model is cleared and all is equal null
         viewModel.apply {
             assertThat(reminderTitle.getOrAwaitValue(), nullValue())
             assertThat(reminderDescription.getOrAwaitValue(),nullValue())

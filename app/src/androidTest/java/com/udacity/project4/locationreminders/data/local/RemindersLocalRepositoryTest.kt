@@ -25,8 +25,9 @@ import org.junit.runner.RunWith
 //Medium Test to test the repository
 @MediumTest
 class RemindersLocalRepositoryTest {
-    private lateinit var localDataSource : ReminderDataSource
+    private lateinit var localDataSource: ReminderDataSource
     private lateinit var database: RemindersDatabase
+
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
@@ -41,6 +42,7 @@ class RemindersLocalRepositoryTest {
             .allowMainThreadQueries()
             .build()
 
+        // creating the datasource repository
         localDataSource =
             RemindersLocalRepository(
                 database.reminderDao(),
@@ -51,6 +53,7 @@ class RemindersLocalRepositoryTest {
     //  cleanup after every test
     @After
     fun cleanUp() {
+        //closing up the database
         database.close()
     }
 
@@ -58,19 +61,29 @@ class RemindersLocalRepositoryTest {
     @Test
     fun saveReminder_retrievesReminder() = runBlocking {
         // GIVEN - a new reminder saved in the database
+        // A dummy reminder to test the saving of the database
         val reminder = ReminderDTO("title", "description", "location", 0.0, 0.0, "id")
+        // saving the dummy text you the repository
         localDataSource.saveReminder(reminder)
 
         // WHEN  - Reminder retrieved by ID
+        // retrieving the data from the repository
         val result = localDataSource.getReminder(reminder.id)
 
         // THEN - Same reminder is returned
+        // check if result from the repository has a Success status
         assertThat(result, instanceOf(Result.Success::class.java))
         result as Result.Success
+        // Checking if the retrieved is equal to the actual data from the repository is the same as the original data
+        // Checking ID
         assertThat(result.data.id, `is`(reminder.id))
+        // Checking Title
         assertThat(result.data.title, `is`(reminder.title))
+        // Checking Description
         assertThat(result.data.description, `is`(reminder.description))
+        // Checking location
         assertThat(result.data.location, `is`(reminder.location))
+        // Checking Longitude and latitude
         assertThat(result.data.latitude, `is`(reminder.latitude))
         assertThat(result.data.longitude, `is`(reminder.longitude))
     }
@@ -79,9 +92,11 @@ class RemindersLocalRepositoryTest {
     @Test
     fun retrievesNotFoundReminder() = runBlocking {
         // WHEN  - a ReminderID was is not in repository
+        // looking for a reminder that doesn't exist
         val result = localDataSource.getReminder("not-found")
 
         // THEN - Returns Error
+        // asserting the error
         assertThat(result, instanceOf(Result.Error::class.java))
     }
 }

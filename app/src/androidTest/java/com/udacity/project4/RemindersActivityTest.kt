@@ -85,12 +85,14 @@ class RemindersActivityTest :
 
     @Before
     fun registerIdlingResource() {
+        // register counting the idle resources
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
     }
 
     @After
     fun unregisterIdlingResource() {
+        // unregister counting the idle resources
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
         IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
     }
@@ -98,49 +100,76 @@ class RemindersActivityTest :
     // Testing if the snackbar appears when there is no title added
     @Test
     fun addReminder_ShowSnackbarWhenNoTitle() = runBlocking {
+        // launching an activity scenario from Reminder Activity
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        // bind the idling recources to monitor the activity that was launched
         dataBindingIdlingResource.monitorActivity(activityScenario)
 
+        // Check if there is no data on the screen.
         onView(withId(R.id.noDataTextView)).check(matches(isDisplayed()))
+        // Click on the add Reminder FAB
         onView(withId(R.id.addReminderFAB)).perform(click())
 
+        // Perform a click on save reminder with no data input
         onView(withId(R.id.saveReminder)).perform(click())
+        // Check if the snackbar appears and says to input data
         onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText(R.string.err_enter_title)))
 
+        // Closing the activity
         activityScenario.close()
     }
     // Testing if the snackbar appears when there is no location added
     @Test
     fun addReminder_ShowSnackbarWhenNoLocation() = runBlocking {
+        // launching an activity scenario from Reminder Activity
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        // bind the idling recources to monitor the activity that was launched
         dataBindingIdlingResource.monitorActivity(activityScenario)
 
+        // Check if there is no data on the screen.
         onView(withId(R.id.noDataTextView)).check(matches(isDisplayed()))
+        // Click on the add Reminder FAB
         onView(withId(R.id.addReminderFAB)).perform(click())
+        // Input a title
         onView(withId(R.id.reminderTitle)).perform(replaceText("new title"))
+        // Click on save
         onView(withId(R.id.saveReminder)).perform(click())
+        // Snackbar of that there is no location chosen
         onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText(R.string.err_select_location)))
 
+        // Closing the activity
         activityScenario.close()
     }
     // Testing if a reminder can be added successfully
     @Test
     fun addReminder_Successful() = runBlocking {
+        // launching an activity scenario from Reminder Activity
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        // bind the idling recources to monitor the activity that was launched
         dataBindingIdlingResource.monitorActivity(activityScenario)
 
+        // Check if there is no data on the screen.
         onView(withId(R.id.noDataTextView)).check(matches(isDisplayed()))
+        // Click on the add Reminder FAB
         onView(withId(R.id.addReminderFAB)).perform(click())
 
+        // Input a title
         onView(withId(R.id.reminderTitle)).perform(replaceText("new title"))
+        // Input a description
         onView(withId(R.id.reminderDescription)).perform(replaceText("new description"))
+        // Start selecting the location
         onView(withId(R.id.selectLocation)).perform(click())
 
+        // Choose a location with a long click
         onView(withId(R.id.google_map)).perform(longClick())
+        // Confirm the location of reminder
         onView(withId(R.id.confirmButton)).perform(click())
+        // Save the reminder
         onView(withId(R.id.saveReminder)).check(matches(isDisplayed())).perform(click())
+        // Check if there is any data displayed and it's not empty
         onView(withId(R.id.noDataTextView)).check(matches(not(isDisplayed())))
 
+        // close activity
         activityScenario.close()
     }
 }
