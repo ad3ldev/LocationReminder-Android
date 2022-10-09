@@ -13,7 +13,7 @@ class FakeDataSource(private val reminders: MutableList<ReminderDTO>? = mutableL
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
         reminders?.let { return Result.Success(ArrayList(it)) }
         return Result.Error(
-            Exception("Reminders not found").toString()
+            "Reminders not found"
         )
     }
 
@@ -35,7 +35,7 @@ class FakeDataSource(private val reminders: MutableList<ReminderDTO>? = mutableL
             }
         }
         return Result.Error(
-            Exception("Reminders not found").toString()
+            "Reminders not found"
         )
     }
 
