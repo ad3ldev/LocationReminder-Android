@@ -9,12 +9,13 @@ import com.udacity.project4.locationreminders.data.dto.Result
 class FakeDataSource(private val reminders: MutableList<ReminderDTO>? = mutableListOf()) :
     ReminderDataSource {
     // Over riding the get reminders method to make it return success if there is any reminders
-    // and returns error if null
+    // and returns an empty list if there is no reminders
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
-        reminders?.let { return Result.Success(ArrayList(it)) }
-        return Result.Error(
-            "Reminders not found"
-        )
+        return try {
+            Result.Success(ArrayList(reminders!!))
+        } catch (ex: Exception) {
+            Result.Error(ex.localizedMessage)
+        }
     }
 
     // Overriding the method in ReminderDataSource to save the reminder in the mutable list Reminders
@@ -24,19 +25,16 @@ class FakeDataSource(private val reminders: MutableList<ReminderDTO>? = mutableL
 
     // Overriding to get the reminder using the filter method
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
-        reminders?.let {
-            val res = reminders.filter { it.id == id }
-            if (res.isEmpty()) {
-                return Result.Error("No result found")
-            } else if (res.size > 1) {
-                return Result.Error("More than one reminder")
+        return try {
+            val reminder = reminders?.find{x-> x.id == id}
+            if (reminder != null) {
+                Result.Success(reminder)
             } else {
-                return Result.Success(res[0])
+                Result.Error("Reminder not found!")
             }
+        } catch (e: Exception) {
+            Result.Error(e.localizedMessage)
         }
-        return Result.Error(
-            "Reminders not found"
-        )
     }
 
     // Clearing the reminders mutable list

@@ -98,5 +98,6 @@ class RemindersLocalRepositoryTest {
         // THEN - Returns Error
         // asserting the error
         assertThat(result, instanceOf(Result.Error::class.java))
+        assertThat(result,`is`(Result.Error("Reminder not found!")))
     }
 }

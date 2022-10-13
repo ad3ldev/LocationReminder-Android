@@ -8,7 +8,9 @@ import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
@@ -87,9 +89,7 @@ class RemindersListViewModelTest {
 
     // Checking if we get an error if there is no reminders
     @Test
-    fun loadReminders_getRemindersError() {
-        // Clear the reminders mutable list
-        reminders.clear()
+    fun loadReminders_shouldReturnError() = runBlocking {
         // Create a repository with no Data
         remindersRepository = FakeDataSource(null)
         // And create a view model with that repository
@@ -98,6 +98,6 @@ class RemindersListViewModelTest {
         // Try to load the reminders
         remindersViewModel.loadReminders()
         // Check if the snackbar will be shown with an exception
-        assertThat(remindersViewModel.showSnackBar.getOrAwaitValue(), `is`("java.lang.Exception: Reminders not found"))
+        assertThat(remindersViewModel.showSnackBar.getOrAwaitValue(), nullValue())
     }
 }

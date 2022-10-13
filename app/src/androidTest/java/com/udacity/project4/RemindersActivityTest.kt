@@ -1,15 +1,16 @@
 package com.udacity.project4
 
-import android.app.Activity
+import ToastMatcher
 import android.app.Application
+import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.udacity.project4.locationreminders.RemindersActivity
@@ -22,7 +23,6 @@ import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorActivity
 import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
@@ -39,8 +39,8 @@ import org.koin.test.get
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class RemindersActivityTest :
-    AutoCloseKoinTest() {// Extended Koin Test - embed autoclose @after method to close Koin after every test
-
+    AutoCloseKoinTest() {
+    // Extended Koin Test - embed autoclose @after method to close Koin after every test
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
 
@@ -117,7 +117,10 @@ class RemindersActivityTest :
 
         // Closing the activity
         activityScenario.close()
+        // Wait for any toasts to disappear
+        Thread.sleep(2500)
     }
+
     // Testing if the snackbar appears when there is no location added
     @Test
     fun addReminder_ShowSnackbarWhenNoLocation() = runBlocking {
@@ -139,7 +142,10 @@ class RemindersActivityTest :
 
         // Closing the activity
         activityScenario.close()
+        // Wait for any toasts to disappear
+        Thread.sleep(2500)
     }
+
     // Testing if a reminder can be added successfully
     @Test
     fun addReminder_Successful() = runBlocking {
@@ -147,6 +153,10 @@ class RemindersActivityTest :
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
         // bind the idling recources to monitor the activity that was launched
         dataBindingIdlingResource.monitorActivity(activityScenario)
+        var decorView: View? = null
+        activityScenario.onActivity {
+            decorView = it.window.decorView
+        }
 
         // Check if there is no data on the screen.
         onView(withId(R.id.noDataTextView)).check(matches(isDisplayed()))
@@ -159,17 +169,21 @@ class RemindersActivityTest :
         onView(withId(R.id.reminderDescription)).perform(replaceText("new description"))
         // Start selecting the location
         onView(withId(R.id.selectLocation)).perform(click())
-
         // Choose a location with a long click
         onView(withId(R.id.google_map)).perform(longClick())
         // Confirm the location of reminder
         onView(withId(R.id.confirmButton)).perform(click())
         // Save the reminder
         onView(withId(R.id.saveReminder)).check(matches(isDisplayed())).perform(click())
+        // Check Toast
+        onView(withText(R.string.reminder_saved)).inRoot(ToastMatcher())
+            .check(matches(isDisplayed()));
         // Check if there is any data displayed and it's not empty
         onView(withId(R.id.noDataTextView)).check(matches(not(isDisplayed())))
 
         // close activity
         activityScenario.close()
+        // Wait for any toasts to disappear
+        Thread.sleep(2500)
     }
 }
