@@ -91,13 +91,13 @@ class RemindersListViewModelTest {
     @Test
     fun loadReminders_shouldReturnError() = runBlocking {
         // Create a repository with no Data
-        remindersRepository = FakeDataSource(null)
-        // And create a view model with that repository
+        remindersRepository = FakeDataSource()
+        remindersRepository.setShouldReturnError(true)
         remindersViewModel =
             RemindersListViewModel(ApplicationProvider.getApplicationContext(), remindersRepository)
         // Try to load the reminders
         remindersViewModel.loadReminders()
         // Check if the snackbar will be shown with an exception
-        assertThat(remindersViewModel.showSnackBar.getOrAwaitValue(), nullValue())
+        assertThat(remindersViewModel.showSnackBar.getOrAwaitValue(), `is` ("Reminders not found"))
     }
 }
