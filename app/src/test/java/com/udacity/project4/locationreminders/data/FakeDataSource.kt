@@ -19,7 +19,7 @@ class FakeDataSource(private val reminders: MutableList<ReminderDTO> = mutableLi
     // and returns an empty list if there is no reminders
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
         if(shouldReturnError) {
-            return Result.Error("Reminders not found")
+            return Result.Error("Unable to retrieve reminders")
         }
         return Result.Success(ArrayList(reminders))
     }
