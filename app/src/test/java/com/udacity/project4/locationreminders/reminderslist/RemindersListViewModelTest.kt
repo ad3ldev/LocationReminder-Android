@@ -98,6 +98,6 @@ class RemindersListViewModelTest {
         // Try to load the reminders
         remindersViewModel.loadReminders()
         // Check if the snackbar will be shown with an exception
-        assertThat(remindersViewModel.showSnackBar.getOrAwaitValue(), `is` ("Reminders not found"))
+        assertThat(remindersViewModel.showSnackBar.getOrAwaitValue(), `is` ("Unable to retrieve reminders"))
     }
 }
